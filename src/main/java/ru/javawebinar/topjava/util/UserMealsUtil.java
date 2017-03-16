@@ -3,11 +3,15 @@ package ru.javawebinar.topjava.util;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.model.UserMealWithExceed;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * GKislin
@@ -28,8 +32,60 @@ public class UserMealsUtil {
 //        .toLocalTime();
     }
 
-    public static List<UserMealWithExceed>  getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        // TODO return filtered list with correctly exceeded field
-        return null;
+
+    public static List<UserMealWithExceed> getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay)
+    {
+
+        final Map<LocalDate, Integer> dayMap = mealList
+                .stream()
+                .collect(
+                        Collectors.groupingBy(
+                                userMeal -> userMeal.getDateTime().toLocalDate(),
+                                Collectors.summingInt(UserMeal::getCalories)
+                        )
+                );
+
+        List<UserMealWithExceed> result = mealList
+                .stream()
+                .filter((userMeal) -> TimeUtil.isBetween(userMeal.getDateTime().toLocalTime(), startTime, endTime))
+                .map((userMeal) -> new UserMealWithExceed(
+                        userMeal.getDateTime(),
+                        userMeal.getDescription(),
+                        userMeal.getCalories(),
+                        (dayMap.get(userMeal.getDateTime().toLocalDate()) > caloriesPerDay)
+                ))
+                .collect(Collectors.toList());
+
+        return result;
+    }
+
+    /**
+     * like getFilteredWithExceeded
+     * реализация через циклы
+     */
+    public static List<UserMealWithExceed> getFilteredWithExceededOLD(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay)
+    {
+
+        Map<LocalDate, Integer> dayMap = new HashMap<>();
+        for (UserMeal um : mealList)
+        {
+            LocalDate localDate = um.getDateTime().toLocalDate();
+            dayMap.put(localDate, dayMap.getOrDefault(localDate, 0) + um.getCalories());
+        }
+
+        List<UserMealWithExceed> result = new ArrayList<>();
+        for (UserMeal um : mealList)
+        {
+            if (!TimeUtil.isBetween(um.getDateTime().toLocalTime(), startTime, endTime)) continue;
+
+            Boolean exceed = (dayMap.get(um.getDateTime().toLocalDate()) > caloriesPerDay);
+            result.add(new UserMealWithExceed(
+                    um.getDateTime(),
+                    um.getDescription(),
+                    um.getCalories(),
+                    exceed
+            ));
+        }
+        return result;
     }
 }
