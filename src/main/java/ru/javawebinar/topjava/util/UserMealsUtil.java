@@ -28,13 +28,13 @@ public class UserMealsUtil {
                 new UserMeal(LocalDateTime.of(2015, Month.MAY, 31,20,0), "Ужин", 510)
         );
         List<UserMealWithExceed> userMealWithExceeds = getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(12,0), 2000);
-        userMealWithExceeds.stream().forEach(System.out::println);
+        userMealWithExceeds.forEach(System.out::println);
 
         // реализация через циклы
         System.out.println();
         System.out.println("Реализация через циклы:");
         List<UserMealWithExceed> userMealWithExceeds_FOREACH = getFilteredWithExceededOLD(mealList, LocalTime.of(7, 0), LocalTime.of(12,0), 2000);
-        userMealWithExceeds_FOREACH.stream().forEach(System.out::println);
+        userMealWithExceeds_FOREACH.forEach(System.out::println);
 
     }
 
@@ -51,18 +51,16 @@ public class UserMealsUtil {
                         )
                 );
 
-        List<UserMealWithExceed> result = mealList
+        return mealList
                 .stream()
-                .filter((userMeal) -> TimeUtil.isBetween(userMeal.getDateTime().toLocalTime(), startTime, endTime))
-                .map((userMeal) -> new UserMealWithExceed(
+                .filter(userMeal -> TimeUtil.isBetween(userMeal.getDateTime().toLocalTime(), startTime, endTime))
+                .map(userMeal -> new UserMealWithExceed(
                         userMeal.getDateTime(),
                         userMeal.getDescription(),
                         userMeal.getCalories(),
                         (dayMap.get(userMeal.getDateTime().toLocalDate()) > caloriesPerDay)
                 ))
                 .collect(Collectors.toList());
-
-        return result;
     }
 
     /**
