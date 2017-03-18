@@ -28,14 +28,25 @@ public class UserMealsUtil {
                 new UserMeal(LocalDateTime.of(2015, Month.MAY, 31,13,0), "Обед", 500),
                 new UserMeal(LocalDateTime.of(2015, Month.MAY, 31,20,0), "Ужин", 510)
         );
+
+        long timeBegin = System.currentTimeMillis();
         List<UserMealWithExceed> userMealWithExceeds = getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(12,0), 2000);
+        long timeEnd = System.currentTimeMillis();
         userMealWithExceeds.forEach(System.out::println);
 
         // реализация через циклы
         System.out.println();
         System.out.println("Реализация через циклы:");
+        long timeBeginOldVersion = System.currentTimeMillis();
         List<UserMealWithExceed> userMealWithExceedsOldVersion = getFilteredWithExceededOldVersion(mealList, LocalTime.of(7, 0), LocalTime.of(12,0), 2000);
+        long timeEndOldVersion = System.currentTimeMillis();
         userMealWithExceedsOldVersion.forEach(System.out::println);
+
+        // время выполнения
+        System.out.println();
+        System.out.println("Время выполнения:");
+        System.out.println("Стримы: " + (timeEnd - timeBegin));
+        System.out.println("Циклы: " + (timeEndOldVersion - timeBeginOldVersion));
 
     }
 
