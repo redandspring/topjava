@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -83,20 +84,16 @@ public class UserMealsUtil {
     {
 
         Map<LocalDate, Integer> dayMap = new HashMap<>();
-        mealList.forEach(userMeal -> {
-            LocalDate localDate = userMeal.getDateTime().toLocalDate();
-            dayMap.put(localDate, dayMap.getOrDefault(localDate, 0) + userMeal.getCalories());
-        });
+        mealList.forEach(userMeal -> dayMap.merge(userMeal.getDateTime().toLocalDate(), userMeal.getCalories(), (a, b) -> a + b));
 
         List<UserMealWithExceed> result = new ArrayList<>();
         mealList.forEach(userMeal -> {
             if (TimeUtil.isBetween(userMeal.getDateTime().toLocalTime(), startTime, endTime)) {
-                Boolean exceed = (dayMap.get(userMeal.getDateTime().toLocalDate()) > caloriesPerDay);
                 result.add(new UserMealWithExceed(
                         userMeal.getDateTime(),
                         userMeal.getDescription(),
                         userMeal.getCalories(),
-                        exceed
+                        (dayMap.get(userMeal.getDateTime().toLocalDate()) > caloriesPerDay)
                 ));
             }
         });
