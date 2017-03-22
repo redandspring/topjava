@@ -8,12 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * GKislin
@@ -84,7 +79,7 @@ public class UserMealsUtil {
     {
 
         Map<LocalDate, Integer> dayMap = new HashMap<>();
-        mealList.forEach(userMeal -> dayMap.merge(userMeal.getDateTime().toLocalDate(), userMeal.getCalories(), (a, b) -> a + b));
+        mealList.forEach(userMeal -> dayMap.merge(userMeal.getDateTime().toLocalDate(), userMeal.getCalories(), Integer::sum));
 
         List<UserMealWithExceed> result = new ArrayList<>();
         mealList.forEach(userMeal -> {
