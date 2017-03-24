@@ -25,13 +25,20 @@
 <h2><a href="index.html">Home</a></h2>
 <h2>Meals List</h2>
 
+<div style="padding-left: 40px">
+
+    <a href="meals?action=EDIT">add new</a>
+    <br />
+    <br />
 <table class="table" cellpadding="6px" cellspacing="1" border="0">
     <tr>
-        <th>dateTime</th>
+        <th>date time</th>
         <th>description</th>
         <th>calories</th>
         <th>exceed</th>
+        <th colspan="2">action</th>
     </tr>
+    <%--@elvariable id="meals" type="java.util.List"--%>
     <c:forEach items="${meals}" var="meal" >
         <tr class="${meal.exceed ? "red" : "green"}">
             <td>
@@ -41,10 +48,12 @@
             <td>${meal.description}</td>
             <td>${meal.calories}</td>
             <td>${meal.exceed ? "yes" : "no"}</td>
+            <td><a href="meals?action=EDIT&id=${meal.id}">edit</a></td>
+            <td><a href="meals?action=DELETE&id=${meal.id}">delete</a></td>
         </tr>
     </c:forEach>
 </table>
-
+</div>
 
 </body>
 </html>
