@@ -15,11 +15,13 @@ public class MealDaoMemoryImpl implements MealDao
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.data().forEach(meal -> {
-            int id  = counter.incrementAndGet();
-            meal.setId(id);
-            storage.putIfAbsent(id, meal);
-        });
+        MealsUtil.data().forEach(meal -> addStorage(meal));
+    }
+
+    private void addStorage(Meal meal) {
+        int id  = counter.incrementAndGet();
+        meal.setId(id);
+        storage.putIfAbsent(id, meal);
     }
 
     @Override
@@ -39,9 +41,7 @@ public class MealDaoMemoryImpl implements MealDao
     @Override
     public void insert(Meal meal)
     {
-        int id = counter.incrementAndGet();
-        meal.setId(id);
-        storage.putIfAbsent(id, meal);
+        addStorage(meal);
     }
 
     @Override
