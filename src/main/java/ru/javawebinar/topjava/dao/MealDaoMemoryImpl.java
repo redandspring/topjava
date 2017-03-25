@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 
 public class MealDaoMemoryImpl implements MealDao
 {
-    private final static Map<Integer, Meal> storage = new ConcurrentHashMap<>();
-    private static AtomicInteger counter = new AtomicInteger(0);
+    private final Map<Integer, Meal> storage = new ConcurrentHashMap<>();
+    private AtomicInteger counter = new AtomicInteger(0);
 
-    static {
-        MealsUtil.dataMeal().forEach(meal -> {
+    {
+        MealsUtil.data().forEach(meal -> {
             int id  = counter.incrementAndGet();
             meal.setId(id);
             storage.putIfAbsent(id, meal);

@@ -7,7 +7,7 @@ import java.util.List;
 public interface MealService
 {
     List<Meal> getAll();
-    Meal getMeal(int id);
-    void addOrEditMeal(Meal meal);
+    Meal get(int id);
+    void addOrEdit(Meal meal);
     void delete(int id);
 }

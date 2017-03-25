@@ -20,7 +20,7 @@
     <div class="form-group">
         <label for="formDateTime">Date and Time: </label>
         <br />
-        <input id="formDateTime" type="datetime" value="${meal.dateTime}" name="dateTime"  />
+        <input id="formDateTime" type="datetime-local" value="${meal.dateTime}" name="dateTime"  />
     </div>
 
     <div class="form-group">
@@ -32,7 +32,7 @@
     <div class="form-group">
         <label for="formCalories">Calories: </label>
         <br />
-        <input id="formCalories" type="text" value="${meal.calories}" name="calories" />
+        <input id="formCalories" type="number" value="${meal.calories}" name="calories" />
     </div>
 
     <div class="form-group">

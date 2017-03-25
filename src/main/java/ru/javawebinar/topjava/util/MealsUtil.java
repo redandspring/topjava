@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 public class MealsUtil {
     public static void main(String[] args) {
 
-        List<MealWithExceed> mealsWithExceeded = getFilteredWithExceeded(dataMeal(), LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
+        List<MealWithExceed> mealsWithExceeded = getFilteredWithExceeded(data(), LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
 
         mealsWithExceeded.forEach(System.out::println);
     }
 
-    public static List<Meal> dataMeal()
+    public static List<Meal> data()
     {
         return Arrays.asList(
                 new Meal(1, LocalDateTime.of(2015, Month.APRIL, 30, 10, 0), "Завтрак", 500),
@@ -36,7 +36,7 @@ public class MealsUtil {
         );
     }
 
-    public static List<MealWithExceed> getMealWithExceeded(List<Meal> meals, int caloriesPerDay)
+    public static List<MealWithExceed> getAllWithExceeded(List<Meal> meals, int caloriesPerDay)
     {
         Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
                 .collect(

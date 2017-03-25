@@ -3,7 +3,6 @@ package ru.javawebinar.topjava.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealNull;
 import ru.javawebinar.topjava.model.MealWithExceed;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.MealServiceImpl;
@@ -33,7 +32,7 @@ public class MealServlet extends HttpServlet
 
         if ("EDIT".equals(action))
         {
-            Meal meal = (id > 0) ? service.getMeal(id) : new MealNull();
+            Meal meal = (id > 0) ? service.get(id) : new Meal(0, LocalDateTime.now(), "", 0);
             req.setAttribute("meal", meal);
             LOG.debug("show form");
             req.getRequestDispatcher("mealForm.jsp").forward(req, resp);
@@ -47,7 +46,7 @@ public class MealServlet extends HttpServlet
         }
         else
         {
-            List<MealWithExceed> mealWithExceeds = MealsUtil.getMealWithExceeded(service.getAll(), 2000);
+            List<MealWithExceed> mealWithExceeds = MealsUtil.getAllWithExceeded(service.getAll(), 2000);
             req.setAttribute("meals", mealWithExceeds);
             LOG.debug("get List count= " + mealWithExceeds.size());
             req.getRequestDispatcher("meals.jsp").forward(req, resp);
@@ -64,7 +63,7 @@ public class MealServlet extends HttpServlet
         String description = req.getParameter("description");
         int calories = parseId(req.getParameter("calories"));
 
-        service.addOrEditMeal(new Meal(id, dateTime, description, calories));
+        service.addOrEdit(new Meal(id, dateTime, description, calories));
 
         LOG.debug("meals refreshed");
         resp.sendRedirect("meals");

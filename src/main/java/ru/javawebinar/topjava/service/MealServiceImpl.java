@@ -18,13 +18,13 @@ public class MealServiceImpl implements MealService
     }
 
     @Override
-    public Meal getMeal(int id)
+    public Meal get(int id)
     {
         return dao.findAllById(id);
     }
 
     @Override
-    public void addOrEditMeal(Meal meal)
+    public void addOrEdit(Meal meal)
     {
         if (meal.getId() > 0)
         {
@@ -39,7 +39,7 @@ public class MealServiceImpl implements MealService
     @Override
     public void delete(int id)
     {
-        Meal meal = getMeal(id);
+        Meal meal = get(id);
         if (meal != null)
         {
             dao.delete(meal);
