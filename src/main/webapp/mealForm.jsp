@@ -36,13 +36,8 @@
     </div>
 
     <div class="form-group">
-        <c:if test="${meal.id > 0}">
-            <input type="submit" value="Submit Edit Meal" class="btn btn-primary"/>
-            <input type="hidden" name="id" value="${meal.id}">
-        </c:if>
-        <c:if test="${meal.id == 0}">
-            <input type="submit" value="Submit Add Meal" class="btn btn-primary"/>
-        </c:if>
+        <input type="hidden" name="id" value="${meal.id}">
+        <input type="submit" value="Submit <c:out value="${meal.id > 0 ? 'Edit' : 'Add'}" /> Meal" class="btn btn-primary"/>
     </div>
 </form>
 </div>

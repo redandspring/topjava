@@ -20,7 +20,7 @@ public class MealServiceImpl implements MealService
     @Override
     public Meal get(int id)
     {
-        return dao.findAllById(id);
+        return dao.findById(id);
     }
 
     @Override
@@ -39,10 +39,6 @@ public class MealServiceImpl implements MealService
     @Override
     public void delete(int id)
     {
-        Meal meal = get(id);
-        if (meal != null)
-        {
-            dao.delete(meal);
-        }
+        dao.delete(id);
     }
 }

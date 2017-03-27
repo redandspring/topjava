@@ -16,37 +16,31 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class MealServlet extends HttpServlet
-{
+public class MealServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(MealServlet.class);
 
     private MealService service = new MealServiceImpl();
 
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-    {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String action = req.getParameter("action");
         int id = parseId(req.getParameter("id"));
 
-        if ("EDIT".equals(action))
-        {
+        if ("EDIT".equals(action)) {
             Meal meal = (id > 0) ? service.get(id) : new Meal(0, LocalDateTime.now(), "", 0);
             req.setAttribute("meal", meal);
+
             LOG.debug("show form");
             req.getRequestDispatcher("mealForm.jsp").forward(req, resp);
-        }
-        else if ("DELETE".equals(action) && id > 0)
-        {
+        } else if ("DELETE".equals(action) && id > 0) {
             service.delete(id);
 
             LOG.debug("meal deleted id = " + id);
             resp.sendRedirect("meals");
-        }
-        else
-        {
-            List<MealWithExceed> mealWithExceeds = MealsUtil.getAllWithExceeded(service.getAll(), 2000);
+        } else {
+            List<MealWithExceed> mealWithExceeds = MealsUtil.getFilteredWithExceeded(service.getAll(), null, null, 2000);
             req.setAttribute("meals", mealWithExceeds);
             LOG.debug("get List count= " + mealWithExceeds.size());
             req.getRequestDispatcher("meals.jsp").forward(req, resp);
@@ -55,8 +49,7 @@ public class MealServlet extends HttpServlet
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-    {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         int id = parseId(req.getParameter("id"));
         LocalDateTime dateTime = LocalDateTime.parse(req.getParameter("dateTime"));
@@ -69,15 +62,9 @@ public class MealServlet extends HttpServlet
         resp.sendRedirect("meals");
     }
 
-    private int parseId(final String id)
-    {
-        try
-        {
-            return Integer.parseInt(id);
-        }
-        catch (NumberFormatException e)
-        {
-            return 0;
-        }
+    private int parseId(final String id) {
+
+        return  (id == null) ? 0 : Integer.parseInt(id);
+
     }
 }
