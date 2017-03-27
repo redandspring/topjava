@@ -64,7 +64,7 @@ public class MealServlet extends HttpServlet {
 
     private int parseId(final String id) {
 
-        return  (id == null) ? 0 : Integer.parseInt(id);
+        return  (id == null || id.isEmpty()) ? 0 : Integer.parseInt(id);
 
     }
 }
