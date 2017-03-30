@@ -37,7 +37,7 @@
 
     <div class="form-group">
         <input type="hidden" name="id" value="${meal.id}">
-        <input type="submit" value="Submit <c:out value="${meal.id > 0 ? 'Edit' : 'Add'}" /> Meal" class="btn btn-primary"/>
+        <input type="submit" value="Submit ${meal.id ? 'Edit' : 'Add'} Meal" class="btn btn-primary"/>
     </div>
 </form>
 </div>
