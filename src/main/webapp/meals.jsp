@@ -19,6 +19,42 @@
 <section>
     <h2><a href="index.html">Home</a></h2>
     <h2>Meal list</h2>
+
+    <form id="filter" action="meals" method="post">
+        <input type="hidden" name="action" value="filter">
+        <table border="0" cellpadding="4" cellspacing="0">
+            <tr>
+                <td>
+                    <label for="startDate">От даты:</label>
+                    <div>
+                        <input class="form-control" name="startDate" id="startDate" type="date">
+                    </div>
+                </td>
+                <td>
+                    <label for="endDate">До даты:</label>
+                    <div>
+                        <input class="form-control" name="endDate" id="endDate" type="date">
+                    </div>
+                </td>
+                <td>
+                    <label for="startTime">От времени:</label>
+                    <div>
+                        <input class="form-control" name="startTime" id="startTime" type="time">
+                    </div>
+                </td>
+                <td>
+                    <label for="endTime">До времени:</label>
+                    <div>
+                        <input class="form-control" name="endTime" id="endTime" type="time">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" align="center"><input type="submit" value="Отфильтровать"></td>
+            </tr>
+        </table>
+    </form>
+
     <a href="meals?action=create">Add Meal</a>
     <hr>
     <table border="1" cellpadding="8" cellspacing="0">
@@ -32,7 +68,7 @@
         </tr>
         </thead>
         <c:forEach items="${meals}" var="meal">
-            <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.model.MealWithExceed"/>
+            <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.to.MealWithExceed"/>
             <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
                 <td>
                         <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}--%>

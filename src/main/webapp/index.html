@@ -11,5 +11,18 @@
     <li><a href="users">User List</a></li>
     <li><a href="meals">Meal List</a></li>
 </ul>
+
+<form action="users" method="post" >
+    <input type="hidden" name="action" value="selectUser">
+    <div>
+    <select name="id">
+        <option value="0">Выберете пользователя</option>
+        <option value="1">Пользователь 1</option>
+        <option value="2">Пользователь 2</option>
+    </select>
+    <input type="submit" value="Выбрать">
+    </div>
+</form>
+
 </body>
 </html>
