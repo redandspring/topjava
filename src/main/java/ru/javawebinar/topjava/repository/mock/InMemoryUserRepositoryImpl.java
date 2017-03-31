@@ -21,12 +21,12 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        // @TODO предусмотрите случай одинаковых User.name
 
-        save(new User(null, "Jacob", "jacob@email.com", "1234", Role.ROLE_USER));
+        save(new User(null, "Jacob", "zzzzz@email.com", "1234", Role.ROLE_ADMIN));
+        save(new User(null, "Jacob", "james@email.com", "1234", Role.ROLE_USER));
         save(new User(null, "Ethan", "ethan@email.com", "1234", Role.ROLE_USER));
         save(new User(null, "Logan", "logan@email.com", "1234", Role.ROLE_USER));
-        save(new User(null, "James", "james@email.com", "1234", Role.ROLE_ADMIN));
+
     }
 
     @Override
@@ -55,7 +55,11 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     public List<User> getAll() {
         LOG.info("getAll");
         return repository.values().stream()
-                .sorted((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()))
+                .sorted((o1, o2) -> {
+                    int comp = o1.getName().compareToIgnoreCase(o2.getName());
+                    return (comp == 0) ? o1.getEmail().compareToIgnoreCase(o2.getEmail()) : comp;
+
+                })
                 .collect(Collectors.toList());
 
     }
