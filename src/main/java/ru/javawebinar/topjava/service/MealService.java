@@ -1,8 +1,8 @@
 package ru.javawebinar.topjava.service;
 
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.to.FilterDate;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface MealService {
@@ -10,7 +10,7 @@ public interface MealService {
 
     Meal get(int id, int userId);
 
-    List<Meal> getByDate(FilterDate filter, int userID);
+    List<Meal> getByDate(LocalDate startDate, LocalDate endDate, int userID);
 
     Meal save(Meal meal);
 

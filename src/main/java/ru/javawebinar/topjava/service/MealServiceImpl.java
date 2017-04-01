@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.to.FilterDate;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
@@ -30,9 +30,8 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public List<Meal> getByDate(FilterDate filter, int userID)
-    {
-        return checkNotFound(repository.getByDate(filter, userID), "filter=" + filter);
+    public List<Meal> getByDate(LocalDate startDate, LocalDate endDate, int userID) {
+        return checkNotFound(repository.getByDate(startDate, endDate, userID), "filterDate=" + startDate + "<->" + endDate);
     }
 
     @Override
@@ -44,18 +43,14 @@ public class MealServiceImpl implements MealService {
     @Override
     public void delete(int id, int userID)
     {
-        if (get(id, userID) != null){
-            checkNotFoundWithId(repository.delete(id), id);
-        }
+        checkNotFoundWithId(repository.delete(id, userID), id);
     }
 
     @Override
     public void update(Meal meal, int userID)
     {
-        if (get(meal.getId(), userID) != null ){
             meal.setUserId(userID);
-            repository.save(meal);
-        }
+            repository.update(meal, userID);
     }
 
 }

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
-import ru.javawebinar.topjava.to.FilterDate;
 import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
 
@@ -36,9 +35,18 @@ public class MealRestController {
     }
 
     public List<MealWithExceed> getByDate(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime){
-        FilterDate filter = new FilterDate(startDate, endDate, startTime, endTime);
-        LOG.info("getByDate " + filter);
-        return MealsUtil.getWithExceeded(service.getByDate(filter, AuthorizedUser.id()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+
+        startDate = (startDate == null ) ? LocalDate.MIN : startDate;
+        endDate = (endDate == null) ? LocalDate.MAX : endDate;
+        startTime = (startTime == null) ? LocalTime.MIN : startTime;
+        endTime = (endTime == null) ? LocalTime.MAX : endTime;
+
+        LOG.info("getByDate " + startDate + "-" + startTime + "-" + endDate + "-" + endTime);
+        return MealsUtil.getFilteredWithExceeded(
+                service.getByDate(startDate, endDate, AuthorizedUser.id()),
+                startTime,
+                endTime,
+                MealsUtil.DEFAULT_CALORIES_PER_DAY);
     }
 
     public Meal create(Meal meal) {
