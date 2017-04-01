@@ -7,6 +7,7 @@ import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,8 +37,9 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public Meal update(Meal meal, int userID) {
-        return get(meal.getUserId(), userID) != null ? save(meal) : null;
+    public Meal update(Meal meal, int userId) {
+
+        return get(meal.getId(), userId) != null ? save(meal) : null;
     }
 
     @Override
@@ -47,8 +49,10 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public Meal get(int id, int userID) {
-        return check(id, userID) ? repository.get(id) : null;
+    public Meal get(int id, int userId) {
+
+        Meal meal = repository.getOrDefault(id, null);
+        return (meal != null && meal.getUserId() == userId) ? meal : null;
     }
 
     @Override
@@ -62,12 +66,8 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
         return repository.values().stream()
                 .filter(meal -> meal.getUserId() == userID)
                 .filter(meal -> DateTimeUtil.isBetween(meal.getDate(), startDate, endDate))
-                .sorted((o1, o2) -> o2.getDateTime().compareTo(o1.getDateTime()))
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                 .collect(Collectors.toList());
-    }
-
-    private boolean check(int id, int userID){
-        return (repository.containsKey(id) && repository.get(id).getUserId() == userID);
     }
 }
 
