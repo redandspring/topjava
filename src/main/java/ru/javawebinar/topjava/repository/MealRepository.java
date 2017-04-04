@@ -12,8 +12,6 @@ import java.util.List;
 public interface MealRepository {
     Meal save(Meal meal);
 
-    Meal update(Meal meal, int userID);
-
     Boolean delete(int id, int userID);
 
     Meal get(int id, int userID);

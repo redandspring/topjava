@@ -8,7 +8,6 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import java.time.LocalDate;
 import java.util.List;
 
-import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
@@ -31,7 +30,7 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public List<Meal> getByDate(LocalDate startDate, LocalDate endDate, int userID) {
-        return checkNotFound(repository.getByDate(startDate, endDate, userID), "filterDate=" + startDate + "<->" + endDate);
+        return repository.getByDate(startDate, endDate, userID);
     }
 
     @Override
@@ -49,8 +48,8 @@ public class MealServiceImpl implements MealService {
     @Override
     public void update(Meal meal, int userID)
     {
-            meal.setUserId(userID);
-            repository.update(meal, userID);
+        meal.setUserId(userID);
+        checkNotFoundWithId(repository.save(meal), meal.getId());
     }
 
 }
