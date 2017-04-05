@@ -1,11 +1,5 @@
 package ru.javawebinar.topjava.repository.mock;
 
-import org.springframework.stereotype.Repository;
-import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.util.DateTimeUtil;
-import ru.javawebinar.topjava.util.MealsUtil;
-
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,6 +8,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Repository;
+
+import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 /**
  * GKislin
@@ -30,16 +31,17 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal save(Meal meal) {
+
+        Map<Integer, Meal> mealMap = repository.computeIfAbsent(meal.getUserId(), i -> new ConcurrentHashMap<>());
+
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            Map<Integer, Meal> mealMap = repository.getOrDefault(meal.getUserId(), new ConcurrentHashMap<>());
-            mealMap.put(meal.getId(), meal);
-            repository.put(meal.getUserId(), mealMap);
-            return meal;
+        }
+        else if ( ! mealMap.containsKey(meal.getId())) {
+            return null;
         }
 
-        Map<Integer, Meal> mealMap = repository.getOrDefault(meal.getUserId(), null);
-        return (mealMap != null && mealMap.containsKey(meal.getId())) ? mealMap.put(meal.getId(), meal) : null;
+        return mealMap.put(meal.getId(), meal);
     }
 
     @Override
