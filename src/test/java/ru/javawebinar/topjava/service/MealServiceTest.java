@@ -1,5 +1,12 @@
 package ru.javawebinar.topjava.service;
 
+import static ru.javawebinar.topjava.MealTestData.*;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,17 +14,11 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.DbPopulator;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import static ru.javawebinar.topjava.MealTestData.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -52,10 +53,10 @@ public class MealServiceTest
         service.get(MEAL_LUNCH_ID, UserTestData.ADMIN_ID);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void delete() throws Exception {
         service.delete(MEAL_LUNCH_ID, UserTestData.USER_ID);
-        service.get(MEAL_LUNCH_ID, UserTestData.USER_ID);
+        MATCHER.assertCollectionEquals(Arrays.asList(MEAL_DINNER,MEAL_BREAKFAST), service.getAll(UserTestData.USER_ID));
     }
 
     @Test(expected = NotFoundException.class)
