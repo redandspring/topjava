@@ -1,37 +1,85 @@
 package ru.javawebinar.topjava.repository.jpa;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
+@Transactional(readOnly = true)
 public class JpaMealRepositoryImpl implements MealRepository {
 
+    @PersistenceContext
+    private EntityManager em;
+
     @Override
+    @Transactional
     public Meal save(Meal meal, int userId) {
-        return null;
+        User userRef = em.getReference(User.class, userId);
+        meal.setUser(userRef);
+        if (meal.isNew()) {
+            em.persist(meal);
+            return meal;
+        } else {
+            return em.createNamedQuery(Meal.UPDATE)
+                    .setParameter("dateTime", meal.getDateTime())
+                    .setParameter("calories", meal.getCalories())
+                    .setParameter("description", meal.getDescription())
+                    .setParameter("id", meal.getId())
+                    .setParameter("user", userRef)
+                    .executeUpdate() != 0 ? meal : null;
+        }
     }
 
     @Override
+    @Transactional
     public boolean delete(int id, int userId) {
-        return false;
+
+        User userRef = em.getReference(User.class, userId);
+        return em.createNamedQuery(Meal.DELETE)
+                .setParameter("id", id)
+                .setParameter("user", userRef)
+                .executeUpdate() != 0;
     }
 
     @Override
     public Meal get(int id, int userId) {
-        return null;
+        User userRef = em.getReference(User.class, userId);
+        Meal result;
+        try {
+            result = em.createNamedQuery(Meal.GET, Meal.class)
+                    .setParameter("id", id)
+                    .setParameter("user", userRef)
+                    .getSingleResult();
+        }
+        catch (NoResultException e){
+            return null;
+        }
+        return result;
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        return null;
+        User userRef = em.getReference(User.class, userId);
+        return em.createNamedQuery(Meal.ALL_SORTED, Meal.class)
+                .setParameter("user", userRef)
+                .getResultList();
     }
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        return null;
+        User userRef = em.getReference(User.class, userId);
+        return em.createNamedQuery(Meal.GET_BETWEEN_DATE, Meal.class)
+                .setParameter("user", userRef)
+                .setParameter("start", startDate)
+                .setParameter("end", endDate)
+                .getResultList();
     }
 }
