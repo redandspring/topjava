@@ -13,13 +13,14 @@ import java.time.LocalTime;
  * 11.01.2015.
  */
 @NamedQueries({
-        @NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal m WHERE m.id=:id AND m.user=:user"),
+        @NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal m WHERE m.id=:id AND m.user.id=:userId"),
         @NamedQuery(name = Meal.UPDATE, query = "UPDATE Meal m " +
                 "SET m.dateTime=:dateTime, m.calories=:calories, m.description=:description " +
                 "WHERE m.id=:id AND m.user=:user"),
-        @NamedQuery(name = Meal.GET, query = "SELECT m FROM Meal m WHERE m.id=:id AND m.user=:user"),
-        @NamedQuery(name = Meal.ALL_SORTED, query = "SELECT m FROM Meal m WHERE m.user=:user ORDER BY m.dateTime DESC"),
-        @NamedQuery(name = Meal.GET_BETWEEN_DATE, query = "SELECT m FROM Meal m WHERE m.user=:user AND m.dateTime BETWEEN :start AND :end ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.GET, query = "SELECT m FROM Meal m WHERE m.id=:id AND m.user.id=:userId"),
+        @NamedQuery(name = Meal.ALL_SORTED, query = "SELECT m FROM Meal m WHERE m.user.id=:userId ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.GET_BETWEEN_DATE, query = "SELECT m FROM Meal m " +
+                "WHERE m.user.id=:userId AND m.dateTime BETWEEN :start AND :end ORDER BY m.dateTime DESC"),
 })
 @Entity
 @Table (name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "meals_unique_user_datetime_idx")})

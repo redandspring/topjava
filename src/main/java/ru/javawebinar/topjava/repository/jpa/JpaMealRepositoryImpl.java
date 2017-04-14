@@ -42,21 +42,19 @@ public class JpaMealRepositoryImpl implements MealRepository {
     @Transactional
     public boolean delete(int id, int userId) {
 
-        User userRef = em.getReference(User.class, userId);
         return em.createNamedQuery(Meal.DELETE)
                 .setParameter("id", id)
-                .setParameter("user", userRef)
+                .setParameter("userId", userId)
                 .executeUpdate() != 0;
     }
 
     @Override
     public Meal get(int id, int userId) {
-        User userRef = em.getReference(User.class, userId);
         Meal result;
         try {
             result = em.createNamedQuery(Meal.GET, Meal.class)
                     .setParameter("id", id)
-                    .setParameter("user", userRef)
+                    .setParameter("userId", userId)
                     .getSingleResult();
         }
         catch (NoResultException e){
@@ -67,17 +65,15 @@ public class JpaMealRepositoryImpl implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        User userRef = em.getReference(User.class, userId);
         return em.createNamedQuery(Meal.ALL_SORTED, Meal.class)
-                .setParameter("user", userRef)
+                .setParameter("userId", userId)
                 .getResultList();
     }
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        User userRef = em.getReference(User.class, userId);
         return em.createNamedQuery(Meal.GET_BETWEEN_DATE, Meal.class)
-                .setParameter("user", userRef)
+                .setParameter("userId", userId)
                 .setParameter("start", startDate)
                 .setParameter("end", endDate)
                 .getResultList();
