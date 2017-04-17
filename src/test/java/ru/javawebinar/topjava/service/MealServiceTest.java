@@ -1,5 +1,15 @@
 package ru.javawebinar.topjava.service;
 
+import static ru.javawebinar.topjava.MealTestData.*;
+import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
+import static ru.javawebinar.topjava.UserTestData.USER_ID;
+
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,18 +24,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
-
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-import static ru.javawebinar.topjava.MealTestData.*;
-import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
-import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -36,6 +37,8 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 public class MealServiceTest {
 
     private static Map<String, Long> testTimeExecution = new HashMap<>();
+
+    private static final String LOG_EXECUTION_TIME_FORMATTER = "Execution method %s took %d MilliSeconds\n";
 
     static {
         SLF4JBridgeHandler.install();
@@ -65,9 +68,8 @@ public class MealServiceTest {
     @AfterClass
     public static void tearDownClass() throws Exception
     {
-        System.out.println("~~~~~~~~~");
-        testTimeExecution.forEach((s, l) -> System.out.println(s + ": "+ l));
-        System.out.println("~~~~~~~~~");
+        System.out.println("Execution time test:");
+        testTimeExecution.forEach((s, l) -> System.out.printf(LOG_EXECUTION_TIME_FORMATTER, s, l));
     }
 
     @Autowired
