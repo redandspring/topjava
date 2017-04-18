@@ -38,8 +38,6 @@ public class MealServiceTest {
 
     private static Map<String, Long> testTimeExecution = new HashMap<>();
 
-    private static final String LOG_EXECUTION_TIME_FORMATTER = "Execution method %s took %d MilliSeconds\n";
-
     static {
         SLF4JBridgeHandler.install();
     }
@@ -69,7 +67,7 @@ public class MealServiceTest {
     public static void tearDownClass() throws Exception
     {
         System.out.println("Execution time test:");
-        testTimeExecution.forEach((s, l) -> System.out.printf(LOG_EXECUTION_TIME_FORMATTER, s, l));
+        testTimeExecution.forEach((s, l) -> System.out.printf("Execution method %20s:  %5d ms\n", s, l));
     }
 
     @Autowired

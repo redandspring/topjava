@@ -1,16 +1,17 @@
 package ru.javawebinar.topjava.repository.jpa;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
-
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Repository
 @Transactional(readOnly = true)
@@ -28,13 +29,8 @@ public class JpaMealRepositoryImpl implements MealRepository {
             em.persist(meal);
             return meal;
         } else {
-            return em.createNamedQuery(Meal.UPDATE)
-                    .setParameter("dateTime", meal.getDateTime())
-                    .setParameter("calories", meal.getCalories())
-                    .setParameter("description", meal.getDescription())
-                    .setParameter("id", meal.getId())
-                    .setParameter("user", userRef)
-                    .executeUpdate() != 0 ? meal : null;
+            Meal mealFind = em.find(Meal.class, meal.getId());
+            return (mealFind != null && userId == mealFind.getUser().getId()) ? em.merge(meal) : null;
         }
     }
 
@@ -50,17 +46,9 @@ public class JpaMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        Meal result;
-        try {
-            result = em.createNamedQuery(Meal.GET, Meal.class)
-                    .setParameter("id", id)
-                    .setParameter("userId", userId)
-                    .getSingleResult();
-        }
-        catch (NoResultException e){
-            return null;
-        }
-        return result;
+
+        Meal meal = em.find(Meal.class, id);
+        return (meal != null && userId == meal.getUser().getId()) ? meal : null;
     }
 
     @Override
