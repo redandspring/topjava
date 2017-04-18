@@ -35,7 +35,6 @@ public class Meal extends BaseEntity {
     private String description;
 
     @Column(name = "calories", nullable = false)
-    @NotBlank
     @Range(min = 10, max = 10000)
     private int calories;
 
