@@ -10,6 +10,7 @@ import java.util.List;
  * 06.03.2015.
  */
 public interface MealRepository {
+
     // null if updated meal do not belong to userId
     Meal save(Meal meal, int userId);
 
@@ -24,4 +25,8 @@ public interface MealRepository {
 
     // ORDERED dateTime
     List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId);
+
+    default Meal getWithUser(int id) {
+        throw new UnsupportedOperationException();
+    }
 }
