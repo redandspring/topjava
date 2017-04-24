@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.repository.datajpa;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,10 +51,7 @@ public class DataJpaMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    @Transactional
-    public Meal getWithUser(int id) {
-        Meal meal = crudRepository.findOne(id);
-        Hibernate.initialize(meal.getUser());
-        return meal;
+    public Meal getWithUser(int id, int userId) {
+        return crudRepository.findWithUser(id, userId);
     }
 }

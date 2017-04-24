@@ -23,7 +23,7 @@ public class SpringMain {
 
         try (AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext()){
 
-            ctx.getEnvironment().setActiveProfiles("jpa", "postgres");
+            ctx.getEnvironment().setActiveProfiles(Profiles.ACTIVE_DB, Profiles.REPOSITORY_IMPLEMENTATION);
             ctx.refresh();
 
             try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext(
