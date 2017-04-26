@@ -54,6 +54,7 @@ public class User extends NamedEntity {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @OrderBy("dateTime DESC")
     private List<Meal> meals;
 
     public User() {

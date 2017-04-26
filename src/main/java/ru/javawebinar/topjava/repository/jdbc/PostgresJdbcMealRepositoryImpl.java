@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.repository.jdbc;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,4 +19,11 @@ public class PostgresJdbcMealRepositoryImpl extends JdbcMealRepositoryImpl
     {
         super(dataSource, jdbcTemplate, namedParameterJdbcTemplate);
     }
+
+    @Override
+    protected <T> T convertDateTime(LocalDateTime dateTime)
+    {
+        return (T) dateTime;
+    }
+
 }

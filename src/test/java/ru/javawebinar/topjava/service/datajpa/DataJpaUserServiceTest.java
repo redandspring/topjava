@@ -7,9 +7,10 @@ import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserServiceTest;
 
+import static ru.javawebinar.topjava.MealTestData.MEALS;
 import static ru.javawebinar.topjava.UserTestData.*;
 
-@ActiveProfiles({Profiles.ACTIVE_DB, Profiles.DATAJPA})
+@ActiveProfiles(Profiles.DATAJPA)
 public class DataJpaUserServiceTest extends UserServiceTest
 {
     @Test
@@ -17,6 +18,6 @@ public class DataJpaUserServiceTest extends UserServiceTest
 
         User user = service.getWithMeal(USER_ID);
         MATCHER.assertEquals(USER, user);
-        MealTestData.MATCHER.assertEquals(MealTestData.MEAL1, user.getMeals().get(0));
+        MealTestData.MATCHER.assertCollectionEquals(MEALS, user.getMeals());
     }
 }

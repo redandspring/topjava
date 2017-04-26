@@ -13,10 +13,13 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import ru.javawebinar.topjava.Profiles;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -24,6 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
+@ActiveProfiles(Profiles.ACTIVE_DB)
 abstract public class ServiceTest {
     protected static final Logger LOG = LoggerFactory.getLogger(ServiceTest.class);
 
