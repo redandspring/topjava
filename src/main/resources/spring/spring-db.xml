@@ -54,6 +54,11 @@
             <constructor-arg ref="dataSource"/>
         </bean>
 
+        <tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager" />
+        <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+            <property  name="dataSource"  ref="dataSource"/>
+        </bean>
+
         <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
             <constructor-arg ref="dataSource"/>
         </bean>
