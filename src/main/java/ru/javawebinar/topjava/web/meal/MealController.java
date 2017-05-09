@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.web;
+package ru.javawebinar.topjava.web.meal;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,7 +22,7 @@ import ru.javawebinar.topjava.web.meal.MealRestController;
 
 @Controller
 @RequestMapping(value = "/meals")
-public class MealController extends MealRestController
+public class MealController extends AbstractMealController
 {
     @Autowired
     public MealController(MealService service)
@@ -36,7 +36,7 @@ public class MealController extends MealRestController
         LocalDate endDate = DateTimeUtil.parseLocalDate(request.getParameter("endDate"));
         LocalTime startTime = DateTimeUtil.parseLocalTime(request.getParameter("startTime"));
         LocalTime endTime = DateTimeUtil.parseLocalTime(request.getParameter("endTime"));
-        model.addAttribute("meals", super.getBetween(startDate, startTime, endDate, endTime));
+        model.addAttribute("meals", getBetween(startDate, startTime, endDate, endTime));
         return "meals";
     }
 
@@ -58,7 +58,7 @@ public class MealController extends MealRestController
 
     @RequestMapping(method = RequestMethod.GET)
     public String all(Model model){
-        model.addAttribute("meals", super.getAll());
+        model.addAttribute("meals", getAll());
         return "meals";
     }
 
@@ -70,7 +70,7 @@ public class MealController extends MealRestController
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
-    public String create(Model model, HttpServletRequest request){
+    public String create(Model model){
         final Meal meal = new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000);
         return createOrUpdate(meal, model);
     }

@@ -48,32 +48,31 @@ public class JdbcUserRepositoryImpl implements UserRepository {
         if (user.isNew()) {
             Number newKey = insertUser.executeAndReturnKey(parameterSource);
             user.setId(newKey.intValue());
-
-            Set<Role> roles = user.getRoles();
-            if (roles != null){
-                final List<Role> rolesList = new ArrayList<>(roles);
-                jdbcTemplate.batchUpdate("INSERT INTO user_roles (user_id, role) VALUES (?,?)", new BatchPreparedStatementSetter()
-                {
-                    @Override
-                    public void setValues(PreparedStatement ps, int i) throws SQLException
-                    {
-                        Role role = rolesList.get(i);
-                        ps.setInt(1, (Integer) newKey);
-                        ps.setString(2, role.toString());
-                    }
-
-                    @Override
-                    public int getBatchSize()
-                    {
-                        return rolesList.size();
-                    }
-                });
-            }
         } else {
             namedParameterJdbcTemplate.update(
                     "UPDATE users SET name=:name, email=:email, password=:password, " +
                             "registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id", parameterSource);
         }
+
+        Set<Role> roles = user.getRoles();
+        if (roles != null){
+            final List<Role> rolesList = new ArrayList<>(roles);
+            jdbcTemplate.update("DELETE FROM user_roles WHERE user_id=?", user.getId());
+            jdbcTemplate.batchUpdate("INSERT INTO user_roles (user_id, role) VALUES (?,?)", new BatchPreparedStatementSetter(){
+                @Override
+                public void setValues(PreparedStatement ps, int i) throws SQLException{
+                    Role role = rolesList.get(i);
+                    ps.setInt(1, user.getId());
+                    ps.setString(2, role.toString());
+                }
+
+                @Override
+                public int getBatchSize(){
+                    return rolesList.size();
+                }
+            });
+        }
+
         return user;
     }
 

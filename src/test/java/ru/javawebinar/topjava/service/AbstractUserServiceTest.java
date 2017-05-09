@@ -14,6 +14,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 
 import static ru.javawebinar.topjava.UserTestData.*;
 
@@ -28,7 +29,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Before
     public void setUp() throws Exception {
         service.evictCache();
-        if ( ! Arrays.stream(environment.getActiveProfiles()).anyMatch("jdbc"::equals)){
+        if (jpaUtil != null && ! Arrays.stream(environment.getActiveProfiles()).anyMatch("jdbc"::equals)){
             jpaUtil.clear2ndLevelHibernateCache();
         }
     }
@@ -85,6 +86,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         User updated = new User(USER);
         updated.setName("UpdatedName");
         updated.setCaloriesPerDay(330);
+        updated.setRoles(new HashSet<>(Arrays.asList(Role.ROLE_ADMIN)));
         service.update(updated);
         MATCHER.assertEquals(updated, service.get(USER_ID));
     }
