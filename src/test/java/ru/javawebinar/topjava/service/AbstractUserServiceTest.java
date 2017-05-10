@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.util.Assert;
+
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.JpaUtil;
@@ -29,7 +31,8 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Before
     public void setUp() throws Exception {
         service.evictCache();
-        if (jpaUtil != null && ! Arrays.stream(environment.getActiveProfiles()).anyMatch("jdbc"::equals)){
+        if ( ! isJdbcProfile()){
+            Assert.notNull(jpaUtil, "jpaUtil must not be null");
             jpaUtil.clear2ndLevelHibernateCache();
         }
     }
@@ -94,7 +97,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Test
     public void testValidation() throws Exception {
 
-        Assume.assumeFalse(Arrays.stream(environment.getActiveProfiles()).anyMatch("jdbc"::equals));
+        Assume.assumeFalse(isJdbcProfile());
 
         validateRootCause(() -> service.save(new User(null, "  ", "mail@yandex.ru", "password", Role.ROLE_USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.save(new User(null, "User", "  ", "password", Role.ROLE_USER)), ConstraintViolationException.class);

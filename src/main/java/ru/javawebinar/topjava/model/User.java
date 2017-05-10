@@ -126,8 +126,7 @@ public class User extends NamedEntity {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles)
-    {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

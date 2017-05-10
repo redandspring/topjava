@@ -19,6 +19,7 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.javawebinar.topjava.ActiveDbProfileResolver;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -88,4 +89,9 @@ abstract public class AbstractServiceTest {
         }
         return result;
     }
+
+    public boolean isJdbcProfile(){
+        return Arrays.stream(environment.getActiveProfiles()).anyMatch("jdbc"::equals);
+    }
+
 }

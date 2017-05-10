@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Repository
+@Transactional(readOnly = true)
 public class JdbcUserRepositoryImpl implements UserRepository {
 
     private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
@@ -102,9 +103,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
             List<Role> roles = jdbcTemplate.query("SELECT * FROM user_roles WHERE user_id=?",
                     (rs, n) -> Role.valueOf(rs.getString("role")),
                     user.getId());
-            if (roles != null){
-                user.setRoles(new HashSet<>(roles));
-            }
+            user.setRoles(new HashSet<>(roles));
         }
         return user;
     }
@@ -115,12 +114,12 @@ public class JdbcUserRepositoryImpl implements UserRepository {
                 "SELECT * FROM users LEFT JOIN user_roles ON users.id = user_roles.user_id ORDER BY name, email",
                 (ResultSetExtractor<List<User>>) rs ->
                 {
-                    Map<String, User> map = new TreeMap<>();
+                    Map<Integer, User> map = new LinkedHashMap<>();
                     User user;
 
                     while(rs.next()) {
 
-                        String id = rs.getString("name") + rs.getString("email");
+                        Integer id = rs.getInt("id");
                         user = map.get(id);
 
                         if ( user == null ) {
