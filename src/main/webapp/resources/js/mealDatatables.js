@@ -1,18 +1,23 @@
-var ajaxUrl = 'ajax/admin/users/';
+var ajaxUrl = 'ajax/meals/';
 var datatableApi;
 
 // $(document).ready(function () {
 $(function () {
 
-    $("body").on("change", "input.enabled", function(){
+    $("#filterMealForm").on("submit", function () {
         $.ajax({
-            url: ajaxUrl + "enabled/" + $(this).attr("id"),
-            type: 'POST',
-            success: function () {
-                updateTable();
-                successNoty('User Enabled');
+            url: ajaxUrl + "filter?" + $(this).serialize(),
+            type: 'GET',
+            success: function (data) {
+                datatableApi.clear();
+                $.each(data, function (key, item) {
+                    datatableApi.row.add(item);
+                });
+                datatableApi.draw();
+                successNoty('Filtered');
             }
         });
+       return false;
     });
 
     datatableApi = $('#datatable').DataTable({
@@ -20,19 +25,13 @@ $(function () {
         "info": true,
         "columns": [
             {
-                "data": "name"
+                "data": "dateTime"
             },
             {
-                "data": "email"
+                "data": "description"
             },
             {
-                "data": "roles"
-            },
-            {
-                "data": "enabled"
-            },
-            {
-                "data": "registered"
+                "data": "calories"
             },
             {
                 "defaultContent": "Edit",
@@ -52,3 +51,7 @@ $(function () {
     });
     makeEditable();
 });
+
+function reset() {
+    updateTable();
+}
