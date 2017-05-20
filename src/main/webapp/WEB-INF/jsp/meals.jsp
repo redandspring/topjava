@@ -15,29 +15,50 @@
             <section>
                 <h3><spring:message code="meals.title"/></h3>
 
-                <form method="post" action="meals/filter" class="form-horizontal" id="filterMealForm">
-                    <dl>
-                        <dt><spring:message code="meals.startDate"/>:</dt>
-                        <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
-                    </dl>
-                    <dl>
-                        <dt><spring:message code="meals.endDate"/>:</dt>
-                        <dd><input type="date" name="endDate" value="${param.endDate}"></dd>
-                    </dl>
-                    <dl>
-                        <dt><spring:message code="meals.startTime"/>:</dt>
-                        <dd><input type="time" name="startTime" value="${param.startTime}"></dd>
-                    </dl>
-                    <dl>
-                        <dt><spring:message code="meals.endTime"/>:</dt>
-                        <dd><input type="time" name="endTime" value="${param.endTime}"></dd>
-                    </dl>
-                    <button type="submit"><spring:message code="meals.filter"/></button>
+                <div class="row">
+                    <div class="col-sm-7">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <form id="filterMealForm" class="form-horizontal" action="/meals/filter" method="post">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2" for="startDate"><spring:message code="meals.startDate"/>:</label>
 
-                    <a class="btn btn-info" onclick="reset()">
-                        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-                    </a>
-                </form>
+                                        <div class="col-sm-4">
+                                            <input class="form-control" type="date" name="startDate" id="startDate" value="${param.startDate}">
+                                        </div>
+
+                                        <label class="control-label col-sm-3" for="startTime"><spring:message code="meals.startTime"/>:</label>
+
+                                        <div class="col-sm-3">
+                                            <input class="form-control" type="time" name="startTime" id="startTime" value="${param.startTime}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2" for="endDate"><spring:message code="meals.endDate"/>:</label>
+
+                                        <div class="col-sm-4">
+                                            <input class="form-control" type="date"  name="endDate" id="endDate" value="${param.endDate}">
+                                        </div>
+
+                                        <label class="control-label col-sm-3" for="endTime"><spring:message code="meals.endTime"/>:</label>
+
+                                        <div class="col-sm-3">
+                                            <input class="form-control" type="time" name="endTime" id="endTime" value="${param.endTime}">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="panel-footer text-right">
+                                <a class="btn btn-danger" type="button" onclick="clearFilter()">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                </a>
+                                <a class="btn btn-primary" type="button" onclick="filterTable()">
+                                    <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="view-box">
                     <a class="btn btn-info" onclick="add()">

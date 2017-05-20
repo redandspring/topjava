@@ -1,24 +1,28 @@
 var ajaxUrl = 'ajax/meals/';
 var datatableApi;
 
+function clearFilter() {
+    updateTable();
+}
+
+function filterTable() {
+    $.ajax({
+        url: ajaxUrl + "filter?" + $("#filterMealForm").serialize(),
+        type: 'GET',
+        success: function (data) {
+            datatableApi.clear();
+            $.each(data, function (key, item) {
+                datatableApi.row.add(item);
+            });
+            datatableApi.draw();
+            successNoty('Filtered');
+        }
+    });
+    return false;
+}
+
 // $(document).ready(function () {
 $(function () {
-
-    $("#filterMealForm").on("submit", function () {
-        $.ajax({
-            url: ajaxUrl + "filter?" + $(this).serialize(),
-            type: 'GET',
-            success: function (data) {
-                datatableApi.clear();
-                $.each(data, function (key, item) {
-                    datatableApi.row.add(item);
-                });
-                datatableApi.draw();
-                successNoty('Filtered');
-            }
-        });
-       return false;
-    });
 
     datatableApi = $('#datatable').DataTable({
         "paging": false,
@@ -51,7 +55,3 @@ $(function () {
     });
     makeEditable();
 });
-
-function reset() {
-    updateTable();
-}
