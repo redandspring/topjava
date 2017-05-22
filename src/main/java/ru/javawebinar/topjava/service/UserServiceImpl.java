@@ -74,6 +74,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
+    @CacheEvict(value = "users", allEntries = true)
     @Override
     public void toggleEnabled(int id) {
         User user = get(id);

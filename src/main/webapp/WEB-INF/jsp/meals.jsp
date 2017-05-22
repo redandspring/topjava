@@ -19,7 +19,7 @@
                     <div class="col-sm-7">
                         <div class="panel panel-default">
                             <div class="panel-body">
-                                <form id="filterMealForm" class="form-horizontal" action="/meals/filter" method="post">
+                                <form id="filterMealForm" class="form-horizontal">
                                     <div class="form-group">
                                         <label class="control-label col-sm-2" for="startDate"><spring:message code="meals.startDate"/>:</label>
 
@@ -52,7 +52,7 @@
                                 <a class="btn btn-danger" type="button" onclick="clearFilter()">
                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                 </a>
-                                <a class="btn btn-primary" type="button" onclick="filterTable()">
+                                <a class="btn btn-primary" type="button" onclick="updateTable()">
                                     <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
                                 </a>
                             </div>
@@ -111,7 +111,7 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" id="detailsForm">
-                    <input type="text" hidden="hidden" id="id" name="id">
+                    <input type="hidden" id="id" name="id">
 
                     <div class="form-group">
                         <label for="dateTime" class="control-label col-xs-3"><spring:message code="meals.dateTime"/></label>

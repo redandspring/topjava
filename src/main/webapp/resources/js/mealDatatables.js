@@ -2,19 +2,18 @@ var ajaxUrl = 'ajax/meals/';
 var datatableApi;
 
 function clearFilter() {
+    $("#filterMealForm").find('input')
+        .not(':button, :submit, :reset, :hidden')
+        .val('');
     updateTable();
 }
 
-function filterTable() {
+function updateTable() {
     $.ajax({
         url: ajaxUrl + "filter?" + $("#filterMealForm").serialize(),
         type: 'GET',
         success: function (data) {
-            datatableApi.clear();
-            $.each(data, function (key, item) {
-                datatableApi.row.add(item);
-            });
-            datatableApi.draw();
+            datatableApi.clear().rows.add(data).draw();
             successNoty('Filtered');
         }
     });
