@@ -19,6 +19,10 @@ function updateRow(id) {
     $('#modalTitle').html(i18n["editTitle"]);
     $.get(ajaxUrl + id, function (data) {
         $.each(data, function (key, value) {
+            if (key === 'dateTime'){
+                value = value.replace("T", " ");
+                value = value.replace(new RegExp(":00$"), "");
+            }
             form.find("input[name='" + key + "']").val(value);
         });
         $('#editRow').modal();
