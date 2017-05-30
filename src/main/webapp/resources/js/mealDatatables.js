@@ -55,8 +55,7 @@ $(function () {
                 "data": "dateTime",
                 "render": function (date, type, row) {
                     if (type === 'display') {
-                        var exceedClass = (row.exceed) ? 'exceededNested' : 'normalNested';
-                        return '<span class="'+exceedClass+'">' + date.replace("T", " ") + '</span>';
+                        return '<span>' + date.replace("T", " ") + '</span>';
                     }
                     return date;
                 }

@@ -21,7 +21,8 @@ function updateRow(id) {
         $.each(data, function (key, value) {
             if (key === 'dateTime'){
                 value = value.replace("T", " ");
-                value = value.replace(new RegExp(":00$"), "");
+                //value = value.replace(new RegExp(":00$"), "");
+                value = value.substr(0, value.length - 3);
             }
             form.find("input[name='" + key + "']").val(value);
         });
