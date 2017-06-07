@@ -8,6 +8,7 @@
 <body>
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
+        <jsp:include page="fragments/lang.jsp"/>
         <div class="navbar-header navbar-brand"><spring:message code="app.title"/></div>
         <div class="navbar-collapse collapse">
             <form:form class="navbar-form navbar-right" role="form" action="spring_security_check" method="post">

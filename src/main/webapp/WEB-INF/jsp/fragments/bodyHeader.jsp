@@ -5,6 +5,8 @@
 
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
+        <jsp:include page="./lang.jsp"/>
+
         <a href="meals" class="navbar-brand"><spring:message code="app.title"/></a>
 
         <div class="collapse navbar-collapse">

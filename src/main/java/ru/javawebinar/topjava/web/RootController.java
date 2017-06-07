@@ -1,19 +1,24 @@
 package ru.javawebinar.topjava.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
+
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.util.UserUtil;
 import ru.javawebinar.topjava.web.user.AbstractUserController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
@@ -80,5 +85,25 @@ public class RootController extends AbstractUserController {
             status.setComplete();
             return "redirect:login?message=app.registered&username=" + userTo.getEmail();
         }
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ModelAndView handleCustomException(HttpServletRequest request, DataIntegrityViolationException ex) {
+
+        ModelAndView model = new ModelAndView("profile");
+        model.addObject("errMsg", ex.getMessage());
+        model.addObject("register", true);
+        model.addObject("userTo", new UserTo(
+                null,
+                request.getParameter("name"),
+                request.getParameter("email"),
+                request.getParameter("password"),
+                Integer.parseInt(request.getParameter("caloriesPerDay"))
+        ));
+
+        // status ?
+        //ex.getBindingResult();
+
+        return model;
     }
 }

@@ -6,7 +6,11 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
 import ru.javawebinar.topjava.util.ValidationUtil;
 import ru.javawebinar.topjava.util.exception.ErrorInfo;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
@@ -24,6 +28,20 @@ public class ExceptionInfoHandler {
     @ResponseBody
     public ErrorInfo handleError(HttpServletRequest req, NotFoundException e) {
         return logAndGetErrorInfo(req, e, false);
+    }
+
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(BindException.class)
+    @ResponseBody
+    public ErrorInfo validation(HttpServletRequest req, BindException e) {
+        return new ErrorInfo(req.getRequestURL(), new Throwable(getFieldError(e.getBindingResult())));
+    }
+
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
+    public ErrorInfo validationRest(HttpServletRequest req, MethodArgumentNotValidException e) {
+        return new ErrorInfo(req.getRequestURL(), new Throwable(getFieldError(e.getBindingResult())));
     }
 
     @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
@@ -48,5 +66,11 @@ public class ExceptionInfoHandler {
             LOG.warn("Exception at request " + req.getRequestURL() + ": " + rootCause.toString());
         }
         return new ErrorInfo(req.getRequestURL(), rootCause);
+    }
+
+    private static String getFieldError(BindingResult result) {
+        StringBuilder sb = new StringBuilder();
+        result.getFieldErrors().forEach(fe -> sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
+        return sb.toString();
     }
 }

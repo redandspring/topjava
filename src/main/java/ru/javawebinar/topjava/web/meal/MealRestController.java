@@ -2,8 +2,11 @@ package ru.javawebinar.topjava.web.meal;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import ru.javawebinar.topjava.View;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealWithExceed;
 
@@ -11,6 +14,8 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = MealRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,7 +42,7 @@ public class MealRestController extends AbstractMealController {
 
     @Override
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void update(@RequestBody Meal meal, @PathVariable("id") int id) {
+    public void update(@Validated(View.ValidatedUI.class) @RequestBody Meal meal, @PathVariable("id") int id) {
         super.update(meal, id);
     }
 
